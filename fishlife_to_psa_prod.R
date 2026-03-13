@@ -133,6 +133,19 @@ for (sp in names(fl_samples)) {
   }
 }
 
+# Export FishLife probability scores used for productivity
+fishlife_scores_df = do.call(rbind, lapply(names(fl_samples), function(sp) {
+  if (is.null(fl_samples[[sp]])) return(NULL)
+  probs = fl_productivity_probs(fl_samples[[sp]]$samples)
+  do.call(rbind, lapply(fl_attrs, function(attr) {
+    p = probs[[attr]]
+    data.frame(species = sp, attribute = attr,
+               prob_low = p["low"], prob_mod = p["mod"], prob_high = p["high"],
+               expected_score = p["low"] * 1 + p["mod"] * 2 + p["high"] * 3,
+               row.names = NULL)
+  }))
+}))
+
 # Double weight for r
 for (sp in names(species_list))
   species_list[[sp]]$weight[species_list[[sp]]$attribute == "r"] = 2
@@ -189,7 +202,8 @@ results_df = do.call(rbind, lapply(names(vulnerability_scores), function(sp) {
 results_df$vul_category = vul_class(results_df$mean_vulnerability)
 
 # Save results
-write.csv(results_df, "psa_results.csv", row.names = FALSE)
+write.csv(results_df,         "psa_results.csv",         row.names = FALSE)
+write.csv(fishlife_scores_df, "fishlife_prod_scores.csv", row.names = FALSE)
 write.csv(
   subset(fl_coverage <- data.frame(
     species      = unique(df$species),
