@@ -291,3 +291,6 @@ plots_psa = psa_main / (hist_plot + plot_spacer() + plot_layout(widths = c(1, 0.
 
 print(plots_psa)
 print(prod_density_plot)
+
+ggsave(plots_psa, filename = "psa_plot.png", width = 10/2, height = 15/2, dpi = 300)
+ggsave(prod_density_plot, filename = "prod_density_plot.png", width = 10, height = 6,  dpi = 300)
