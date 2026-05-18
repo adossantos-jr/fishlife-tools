@@ -1,2 +1,2 @@
 # fishlife-tools
-Stuff to help me navigate FishLife 
+Scripts to help me navigate FishLife 
